@@ -113,10 +113,14 @@ class NiftiDataset(Dataset):
         if self.transform is not None:
             random.seed(seed)
             img = self.transform(img)
+            random_sync_test = np.random.randint(2147483647)
 
         if self.seg_transform is not None:
             random.seed(seed)  # ensure randomized transforms roll the same values for segmentations as images
             seg = self.seg_transform(seg)
+            
+            if self.transform is not None:
+                assert(random_sync_test == np.random.randint(2147483647))
 
         if self.image_only or meta_data is None:
             return img, seg
